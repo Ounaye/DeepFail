@@ -6,10 +6,19 @@ Comment analyser les images ?
 - Code Python afin de récupérer toutes les informations de couleurs d'une image -> scatter
 - from PIL import Image -> r.histogram()
 
-(Yannis) 
-
-J'ai traité les données en fonction de leur nombre maximum de couleur
+(Yannis) : J'ai traité les données en fonction de leur nombre maximum de couleur
 Et je l'ai ai mise en format pour que l'on puisse appliquer les algorithmes vues en cours
 Fichier de programme principale modifier
 Pour récupérer l'ensemble des fichiers je me suis appuyer sur ce lien :  https://docs.python.org/fr/3.6/library/glob.html
 On obtient un résultat de 0,58 donc très mauvais comme attendu
+
+19/01 :
+
+(Yannis) : J'ai implémenter une seconde qui utilise les histogrammes de couleur,j'arrive toujours sur de très mauvais résultat
+J'ai regardé le jeu de donnés et j'ai remarquer que si on arrive à dire si une image est bleu ou pas c'est déjà bien
+Donc j'ai essayer de faire ça, mais la manière dont on récupère les images est pas super
+J'en ai trouver une autre qui me parait plus flexible qui utilise skimage.
+Il y a une erreur dans le jeu de donné : Mer_3 pillq
+
+A faire : Utiliser cette nouvelle manière de prendre les images plus flexibles pour donner plus d'information à notre fonction gaussienne
+Attention donner tout nos pixels n'est pas une option ( beaucoup trop long !! )
