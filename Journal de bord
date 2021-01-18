@@ -5,3 +5,11 @@ Début de projet, Tp de Base python (sklearn), quelques idées
 Comment analyser les images ?
 - Code Python afin de récupérer toutes les informations de couleurs d'une image -> scatter
 - from PIL import Image -> r.histogram()
+
+(Yannis) 
+
+J'ai traité les données en fonction de leur nombre maximum de couleur
+Et je l'ai ai mise en format pour que l'on puisse appliquer les algorithmes vues en cours
+Fichier de programme principale modifier
+Pour récupérer l'ensemble des fichiers je me suis appuyer sur ce lien :  https://docs.python.org/fr/3.6/library/glob.html
+On obtient un résultat de 0,58 donc très mauvais comme attendu
