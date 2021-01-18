@@ -50,6 +50,8 @@ def openImg(str):
     r,g,b = img.split()
     return r, g, b
 
+# MaxColor : Dumb Test 0,5 de prédiction
+
 def findMax(histo):
     tmp = 0
     for i in histo:
@@ -69,12 +71,60 @@ def processImgByMax(str):
         tmp = maxB
     return tmp
 
+# SommeMaxColor : StillDumb 0,5 de prédiction
+
+def findMaxSomme(histo):
+    tmp = 0
+    for i in histo:
+        tmp += i
+    return i
+
+def processImgByMaxSomme(str):
+    r,g,b = openImg(str)
+    maxR = findMaxSomme(r.histogram())
+    maxG = findMaxSomme(g.histogram())
+    maxB = findMaxSomme(b.histogram())
+    return [maxR,maxG,maxB]
+        
+# Conclusion : analyser les couleurs les présentes ça sert à pas grand chose
+
+#Erreur dans le jeu de donné : Mer_3 pillq
+
+# Après avoir regarder les images je remarques que détecter les images
+# où il y a le plus de pixel bleu fait sens mais les programmes précédents
+# ne font pas ça
+
+# # Le problème de histogramme ( de ce que je comprend)
+# c'est que on a pas vraiment une vision de pixel par pixel,
+# il compte directement le nombre de pixel c'est pas pratique'
+
+# Une liste interessante des autres manières de traiter une image
+# https://moncoachdata.com/blog/10-outils-de-traitement-dimages-en-python/
+
+import skimage
+
+
+
+
+import glob as glb
+from skimage import io
+list_files = glb.glob("Data/Ailleurs/**/*.jpeg", recursive=True)
+
+
+image_list = []
+for filename in list_files:
+        image_list.append(io.imread(filename))
+
+# Donc ça donne une liste de numpy array, un par image 
+
+
+
 
 
 
 # Lien utilisé pour récupérer les images https://docs.python.org/fr/3.6/library/glob.html
 
-import glob as glb
+# import glob as glb
 from numpy import zeros
 
 import numpy as np
@@ -83,24 +133,25 @@ allImageNonMer = glb.glob("Data/Ailleurs/**/*.jpeg", recursive=True)
 allImageMer = glb.glob("Data/Mer/**/*.jpeg", recursive=True)
 
 
-tabOfData = zeros((len(allImageMer)+len(allImageNonMer),1))
+tabOfData = zeros((len(allImageMer)+len(allImageNonMer),3))
 tabOfResult = np.arange((len(allImageMer)+len(allImageNonMer)))
 
-index = 0
-for i in allImageMer: #1 à 4 secondes d'exécution
-    tabOfData[index] = processImgByMax(i)
-    tabOfResult[index] = 1
-    index +=1
-for i in allImageNonMer:
-    tabOfData[index] = processImgByMax(i)
-    tabOfResult[index] = -1
-    index +=1
-
-# A partir d'ici j'ai betement copier coller le TP pour faire marcher le truc
-
+def makeTabForSk():
+    index = 0
+    for i in allImageMer: #1 à 4 secondes d'exécution
+        tabOfData[index] = processImgByMaxSomme(i) # Modifier cette fonction
+        tabOfResult[index] = 1
+        index +=1
+    for i in allImageNonMer:
+        tabOfData[index] = processImgByMaxSomme(i)# Modifier cette fonction
+        tabOfResult[index] = -1
+        index +=1
 
 print(tabOfData.shape)
 
+makeTabForSk()
+
+# A partir d'ici j'ai betement copier coller le TP pour faire marcher le truc
     
 from sklearn.model_selection import train_test_split
 
