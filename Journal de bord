@@ -2,3 +2,6 @@
 
 18/01/2021 :
 Début de projet, Tp de Base python (sklearn), quelques idées
+Comment analyser les images ?
+- Code Python afin de récupérer toutes les informations de couleurs d'une image -> scatter
+- from PIL import Image -> r.histogram()
