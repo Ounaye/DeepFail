@@ -85,21 +85,11 @@ def processImgByMaxSomme(str):
     maxG = findMaxSomme(g.histogram())
     maxB = findMaxSomme(b.histogram())
     return [maxR,maxG,maxB]
-        
-# Conclusion : analyser les couleurs les présentes ça sert à pas grand chose
+
 
 #Erreur dans le jeu de donné : Mer_3 pillq
 
-# Après avoir regarder les images je remarques que détecter les images
-# où il y a le plus de pixel bleu fait sens mais les programmes précédents
-# ne font pas ça
 
-# # Le problème de histogramme ( de ce que je comprend)
-# c'est que on a pas vraiment une vision de pixel par pixel,
-# il compte directement le nombre de pixel c'est pas pratique'
-
-# Une liste interessante des autres manières de traiter une image
-# https://moncoachdata.com/blog/10-outils-de-traitement-dimages-en-python/
 
 import skimage
 
@@ -107,6 +97,7 @@ import skimage
 
 
 import glob as glb
+from numpy import zeros
 from skimage import io
 list_files = glb.glob("Data/Ailleurs/**/*.jpeg", recursive=True)
 
@@ -117,6 +108,59 @@ for filename in list_files:
 
 # Donc ça donne une liste de numpy array, un par image 
 
+# Tableau Colonne, de Tableau Ligne d'un tableau de taille 3
+
+# On veut prendre ce tableau^3
+# Décider si un pixel est bleu ou pass
+# Et faire ça n*n².
+# A chaque fois on ajoute un si oui.
+# Si on a plus de oui que le threshold on renvoie 1 sinon -1 
+# Donc là on fait tous le taff de dapprentissage
+
+# Notre fonction dapprentissage prend un tableau de nbrParamètre * 
+# nbrData en entrée.
+# Donc là on lui donne un paramètres bleu ou pas et il décide.
+# Le résultat c'est la correspondance entre le bleu et la mer
+
+def isBlue(pixel):
+    blueValue = pixel[2]
+    if(pixel[0] < blueValue and pixel[1] < blueValue):
+        return True
+    return False
+
+def analyseImageBlue(imageArray):
+    nbrBlue = 0
+    indexI = -1
+    indexJ = -1
+    for i in imageArray:
+        for j in imageArray[indexI]:
+            if(isBlue(imageArray[indexI,indexJ])):
+                nbrBlue += 1
+            indexJ +=1
+        indexI += 1
+        indexJ = 0
+    return nbrBlue
+
+def analyseAllImg(threshold):
+    tabOfDataBlue = zeros(len(image_list))
+    index = 0
+    for i in image_list:
+        if(analyseImageBlue(i) > threshold):
+            tabOfDataBlue[index] = 1
+        else:
+            tabOfDataBlue[index] = -1
+        index +=1
+    return tabOfDataBlue
+            
+
+tabOfBlueData = analyseAllImg(400)
+
+print("Stop") # 5 minutes de run on a traiter 100 images sur 400
+# là on fait juste 3 opération par Pixel: 
+#Une affectation et 2 comparaisons
+# La priorité avant tout autre travail va être de modifier les images
+
+
 
 
 
@@ -125,7 +169,6 @@ for filename in list_files:
 # Lien utilisé pour récupérer les images https://docs.python.org/fr/3.6/library/glob.html
 
 # import glob as glb
-from numpy import zeros
 
 import numpy as np
 
@@ -136,7 +179,7 @@ allImageMer = glb.glob("Data/Mer/**/*.jpeg", recursive=True)
 tabOfData = zeros((len(allImageMer)+len(allImageNonMer),3))
 tabOfResult = np.arange((len(allImageMer)+len(allImageNonMer)))
 
-def makeTabForSk():
+def makeTabForSk(): 
     index = 0
     for i in allImageMer: #1 à 4 secondes d'exécution
         tabOfData[index] = processImgByMaxSomme(i) # Modifier cette fonction
@@ -152,23 +195,26 @@ print(tabOfData.shape)
 makeTabForSk()
 
 # A partir d'ici j'ai betement copier coller le TP pour faire marcher le truc
-    
+
+
 from sklearn.model_selection import train_test_split
-
-
-X_train, X_test, y_train, y_test = train_test_split(tabOfData, tabOfResult, test_size=0.20) 
-
 from sklearn.naive_bayes import GaussianNB
-
-classifieur = GaussianNB()
-
-classifieur.fit(X_train, y_train)
-
-y_predits = classifieur.predict(X_test)
-
-
 from sklearn.metrics import accuracy_score
-print(accuracy_score(y_test,y_predits))
+
+def makeTraining(tabData,tabResult):
+    
+    #On fait nos samples test/entrainement    
+    X_train, X_test, y_train, y_test = train_test_split(tabData, tabResult, test_size=0.20) 
+    
+    #On entraine
+    classifieur = GaussianNB()
+    classifieur.fit(X_train, y_train)
+    
+    #On test
+    y_predits = classifieur.predict(X_test)
+    print(accuracy_score(y_test,y_predits))
+    
+makeTraining(tabOfBlueData, tabOfResult)
 
 
 
