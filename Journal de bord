@@ -22,3 +22,7 @@ Il y a une erreur dans le jeu de donné : Mer_3 pillq
 
 A faire : Utiliser cette nouvelle manière de prendre les images plus flexibles pour donner plus d'information à notre fonction gaussienne
 Attention donner tout nos pixels n'est pas une option ( beaucoup trop long !! )
+
+(Yannis) : J'ai essayer de faire une analyse simple pixel par pixel de chaque image c'est bien trop long, il va falloir réduire les images
+Le code écrit avec les mots BLUE manipule des tableaux en 3 dimensions, ce qui rend la lecture du code compliquer
+J'ai aussi mis la partie apprentissage sous forme de fonction pour plus de flexibilité
