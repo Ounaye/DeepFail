@@ -26,3 +26,8 @@ Attention donner tout nos pixels n'est pas une option ( beaucoup trop long !! )
 (Yannis) : J'ai essayer de faire une analyse simple pixel par pixel de chaque image c'est bien trop long, il va falloir réduire les images
 Le code écrit avec les mots BLUE manipule des tableaux en 3 dimensions, ce qui rend la lecture du code compliquer
 J'ai aussi mis la partie apprentissage sous forme de fonction pour plus de flexibilité
+
+(Groupe) : 
+César : doit trouver des moyens de traiter les couleurs efficacements : Trouver à partir d'un histogramme si il y a une dominance de bleu ou quoi
+Yannis : Réduire la quantité de pixel par 25 sur chaque image
+Dylan : regarde les moocs de la prof, trouve des ressources, notamment comment trouver des formes sur les images
