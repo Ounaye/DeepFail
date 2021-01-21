@@ -5,44 +5,9 @@ Created on Mon Jan 18 16:35:44 2021
 @author: Ounaye
 """
 
-
-# from PIL.Image import *
-# from matplotlib import pyplot as plt
-
-
-# img = open("Data/Ailleurs/Ailleurs3/tagt0o.jpeg")
-
-
-# A=img.histogram()
-
-# R=A[ 0:255 ]
-# G=A[ 256:511 ]
-# B=A[ 512:767 ]
-
-# xs=range(255)
-# plt.scatter(xs,R, c='red')
-# plt.scatter(xs,G, c='green')
-# plt.scatter(xs,B, c='blue')
-
 from PIL import Image 
 from matplotlib import pyplot as plt
-  
-# img = Image.open("Data/Ailleurs/Ailleurs3/tagt0o.jpeg") 
-# r, g, b = img.split() 
-# print(len(r.histogram())) 
-# ### 256 ### 
 
-# xs=range(256)
-# plt.scatter(xs,r.histogram(), c='red')
-# plt.scatter(xs,g.histogram(), c='green')
-# plt.scatter(xs,b.histogram(), c='blue')
-# 256*256*3 
-
-# Variable : Une Matrice de (Matrice de taille 768) 
-#On fait la max du bleu, la max du vert et la max du rouge
-#On a donc 3 données par images et on voit ce que ça donne
-
-# Resultat : Bool
 
   
 def openImg(str):
@@ -86,41 +51,7 @@ def processImgByMaxSomme(str):
     maxB = findMaxSomme(b.histogram())
     return [maxR,maxG,maxB]
 
-
-#Erreur dans le jeu de donné : Mer_3 pillq
-
-
-
-import skimage
-
-
-
-
-import glob as glb
-from numpy import zeros
-from skimage import io
-list_files = glb.glob("Data/Ailleurs/**/*.jpeg", recursive=True)
-
-
-image_list = []
-for filename in list_files:
-        image_list.append(io.imread(filename))
-
-# Donc ça donne une liste de numpy array, un par image 
-
-# Tableau Colonne, de Tableau Ligne d'un tableau de taille 3
-
-# On veut prendre ce tableau^3
-# Décider si un pixel est bleu ou pass
-# Et faire ça n*n².
-# A chaque fois on ajoute un si oui.
-# Si on a plus de oui que le threshold on renvoie 1 sinon -1 
-# Donc là on fait tous le taff de dapprentissage
-
-# Notre fonction dapprentissage prend un tableau de nbrParamètre * 
-# nbrData en entrée.
-# Donc là on lui donne un paramètres bleu ou pas et il décide.
-# Le résultat c'est la correspondance entre le bleu et la mer
+# On essaye de faire un traitement sur plus de pixel
 
 def isBlue(pixel):
     blueValue = pixel[2]
@@ -141,58 +72,67 @@ def analyseImageBlue(imageArray):
         indexJ = 0
     return nbrBlue
 
-def analyseAllImg(threshold):
-    tabOfDataBlue = zeros(len(image_list))
+def analyseAllImg(threshold,tabImg):
+    tabOfDataBlue = zeros(len(tabImg))
     index = 0
-    for i in image_list:
+    for i in tabImg:
         if(analyseImageBlue(i) > threshold):
             tabOfDataBlue[index] = 1
         else:
             tabOfDataBlue[index] = -1
         index +=1
     return tabOfDataBlue
-            
-
-tabOfBlueData = analyseAllImg(400)
-
-print("Stop") # 5 minutes de run on a traiter 100 images sur 400
-# là on fait juste 3 opération par Pixel: 
-#Une affectation et 2 comparaisons
-# La priorité avant tout autre travail va être de modifier les images
 
 
 
 
-
-
-
-# Lien utilisé pour récupérer les images https://docs.python.org/fr/3.6/library/glob.html
-
-# import glob as glb
-
+import glob as glb
+from numpy import zeros
+from skimage import io
+import skimage.transform as sky_trfm
 import numpy as np
 
-allImageNonMer = glb.glob("Data/Ailleurs/**/*.jpeg", recursive=True)
-allImageMer = glb.glob("Data/Mer/**/*.jpeg", recursive=True)
+
+list_filesNM = glb.glob("Data/Ailleurs/**/*.jpeg", recursive=True)
+image_listNM = []
+for filename in list_filesNM:
+        image_listNM.append(io.imread(filename))
+
+list_filesM = glb.glob("Data/Mer/**/*.jpeg", recursive=True)
+image_listM = []
+for filename in list_filesM:
+        image_listM.append(io.imread(filename))
 
 
-tabOfData = zeros((len(allImageMer)+len(allImageNonMer),3))
-tabOfResult = np.arange((len(allImageMer)+len(allImageNonMer)))
 
-def makeTabForSk(): 
+def rescaleImg(listImg,listNameImg):
+#Flemme de gérer le warning pour l'instant
+    for i in range(len(listImg)):
+        tmpImg = sky_trfm.resize(listImg[i], (64,64))
+        io.imsave(listNameImg[i], tmpImg)
+
+# Modifie totalement les images !!
+# rescaleImg(image_listNM, list_filesNM)
+#rescaleImg(image_listM,list_filesM)
+
+
+
+
+def prepareTabForLearning(tabOfM,tabOfNM):
+    tabOfData = zeros((len(tabOfM)+len(tabOfNM),3))
+    tabOfResult = np.arange((len(tabOfM)+len(tabOfNM)))
     index = 0
-    for i in allImageMer: #1 à 4 secondes d'exécution
+    for i in tabOfM: #1 à 4 secondes d'exécution
         tabOfData[index] = processImgByMaxSomme(i) # Modifier cette fonction
         tabOfResult[index] = 1
         index +=1
-    for i in allImageNonMer:
+    for i in tabOfNM:
         tabOfData[index] = processImgByMaxSomme(i)# Modifier cette fonction
         tabOfResult[index] = -1
         index +=1
+    return (tabOfData,tabOfResult)
+    
 
-print(tabOfData.shape)
-
-makeTabForSk()
 
 # A partir d'ici j'ai betement copier coller le TP pour faire marcher le truc
 
@@ -214,7 +154,7 @@ def makeTraining(tabData,tabResult):
     y_predits = classifieur.predict(X_test)
     print(accuracy_score(y_test,y_predits))
     
-makeTraining(tabOfBlueData, tabOfResult)
+#makeTraining(tabOfBlueData, tabOfResult)
 
 
 
