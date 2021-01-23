@@ -38,3 +38,10 @@ A finir avant Dimanche 24 janvier
 
 (Yannis) : J'ai clean un peu le code et ajouté une fonction qui redimensionne toutes nos images
 J'ai pas eu le temps de tester nos anciens algorithmes dessus
+
+23/01 :
+
+(Dylan) :  J'ai fait différentes recherches sur le traitement d'une image et notamment la détéction de contour. J'ai pu trouver un moyen qui fonctionne au niveau des valeurs RGB d'un pixel. Le code est d'ailleurs détaillé sur un site : "https://cache.media.eduscol.education.fr/file/ISN_Tle_S/27/1/lyceeGT_ressource_ISN_20_06_Tle_S_22_Traitement_images_2_218271.pdf"
+J'ai aussi pu trouver un module python sur un autre site qui nous permet de colorer une image afin de détécter les concours, le site contient par ailleurs un code qui fait. Ce site a d'ailleurs un exemple de détection de contours et cek apeut réellement nous aider pour trouver des vagues dans une image (En effet des vagues différencieraient bien n'importe quel point d'eau de la mer).
+Nouveau site en question : https://moonbooks.org/Articles/Détecter-les-contours-dune-image-avec-un-filtre-de-Canny-sous-python/
+
