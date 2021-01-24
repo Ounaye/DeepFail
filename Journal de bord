@@ -45,3 +45,12 @@ J'ai pas eu le temps de tester nos anciens algorithmes dessus
 J'ai aussi pu trouver un module python sur un autre site qui nous permet de colorer une image afin de détécter les concours, le site contient par ailleurs un code qui fait. Ce site a d'ailleurs un exemple de détection de contours et cek apeut réellement nous aider pour trouver des vagues dans une image (En effet des vagues différencieraient bien n'importe quel point d'eau de la mer).
 Nouveau site en question : https://moonbooks.org/Articles/Détecter-les-contours-dune-image-avec-un-filtre-de-Canny-sous-python/
 
+24/01 : 
+
+(Equipe) : On a tester l'algo pour voir si il y a assez de bleu on doit déterminer le Threshold. On a pu monter à des 0.7 de réussite en moyenne
+Dylan : Doit faire une fonction qui détermine le Threshold Optimal
+Yannis : Faire la fonction de batch des tests
+On a eu l'idée ajouter d'autres paramètres d'apprentissages, Il faut consulté les liens de Dylan pour bien les utilisés 
+
+
+
