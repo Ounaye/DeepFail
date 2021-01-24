@@ -52,6 +52,7 @@ def processImgByMaxSomme(str):
     return [maxR,maxG,maxB]
 
 # On essaye de faire un traitement sur plus de pixel
+# 0.6 de réussite
 
 def isBlue(pixel):
     blueValue = pixel[2]
@@ -73,15 +74,11 @@ def analyseImageBlue(imageArray):
     return nbrBlue
 
 def analyseAllImg(threshold,tabImg):
-    tabOfDataBlue = zeros(len(tabImg))
-    index = 0
-    for i in tabImg:
-        if(analyseImageBlue(i) > threshold):
-            tabOfDataBlue[index] = 1
-        else:
-            tabOfDataBlue[index] = -1
-        index +=1
-    return tabOfDataBlue
+    if(analyseImageBlue(tabImg) > threshold):
+        return 1
+    else:
+        return -1
+
 
 
 
@@ -91,6 +88,9 @@ from numpy import zeros
 from skimage import io
 import skimage.transform as sky_trfm
 import numpy as np
+
+# Si on enlève le filtrage .jpeg 
+# Il a besoin de format de lecture en arg
 
 
 list_filesNM = glb.glob("Data/Ailleurs/**/*.jpeg", recursive=True)
@@ -117,17 +117,16 @@ def rescaleImg(listImg,listNameImg):
 
 
 
-
 def prepareTabForLearning(tabOfM,tabOfNM):
     tabOfData = zeros((len(tabOfM)+len(tabOfNM),3))
     tabOfResult = np.arange((len(tabOfM)+len(tabOfNM)))
     index = 0
     for i in tabOfM: #1 à 4 secondes d'exécution
-        tabOfData[index] = processImgByMaxSomme(i) # Modifier cette fonction
+        tabOfData[index] = analyseAllImg(2000,i)# Modifier cette fonction
         tabOfResult[index] = 1
         index +=1
     for i in tabOfNM:
-        tabOfData[index] = processImgByMaxSomme(i)# Modifier cette fonction
+        tabOfData[index] = analyseAllImg(2000,i)# Modifier cette fonction
         tabOfResult[index] = -1
         index +=1
     return (tabOfData,tabOfResult)
@@ -153,8 +152,10 @@ def makeTraining(tabData,tabResult):
     #On test
     y_predits = classifieur.predict(X_test)
     print(accuracy_score(y_test,y_predits))
-    
-#makeTraining(tabOfBlueData, tabOfResult)
+
+
+a,b = prepareTabForLearning(image_listM,image_listNM)
+makeTraining(a,b)
 
 
 
