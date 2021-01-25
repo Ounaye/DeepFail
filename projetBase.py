@@ -137,8 +137,32 @@ def prepareTabForLearning(tabOfM,tabOfNM):
 
 
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GroupKFold 
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score
+
+X = np.array([[1, 2], [3, 4], [5, 6], [7, 8]])
+y = np.array([1, 2, 3, 4])
+groups = np.array([0, 0, 2, 2])
+group_kfold = GroupKFold(n_splits=2)
+group_kfold.get_n_splits(X, y, groups)
+
+print(group_kfold)
+GroupKFold(n_splits=2)
+for train_index, test_index in group_kfold.split(X, y, groups):
+    print("TRAIN:", train_index, "TEST:", test_index)
+    X_train, X_test = X[train_index], X[test_index]
+    y_train, y_test = y[train_index], y[test_index]
+    print("X_Train ")
+    print(X_train)
+    print("X_test ") 
+    print(X_test)
+    print("y_train ") 
+    print(y_train)
+    print("y_test")
+    print(y_test)
+
+
 
 def makeTraining(tabData,tabResult):
     
@@ -154,8 +178,8 @@ def makeTraining(tabData,tabResult):
     print(accuracy_score(y_test,y_predits))
 
 
-a,b = prepareTabForLearning(image_listM,image_listNM)
-makeTraining(a,b)
+#a,b = prepareTabForLearning(image_listM,image_listNM)
+#makeTraining(a,b)
 
 
 
