@@ -52,5 +52,12 @@ Dylan : Doit faire une fonction qui détermine le Threshold Optimal
 Yannis : Faire la fonction de batch des tests
 On a eu l'idée ajouter d'autres paramètres d'apprentissages, Il faut consulté les liens de Dylan pour bien les utilisés 
 
+25/01 : 
+
+(Equipe) : Séance en groupe avec le prof, il nous a aiguiller sur de la reconnaissance d'image par convolution, avec gradient etc.. 
+Dylan : Implémenter les algo dans cette pages https://learnopencv.com/histogram-of-oriented-gradients/ 
+ils vont nous permettre de détecter les contours
+Yannis : Faire la fonction de batch des tests
+
 
 
