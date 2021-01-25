@@ -52,12 +52,18 @@ Dylan : Doit faire une fonction qui détermine le Threshold Optimal
 Yannis : Faire la fonction de batch des tests
 On a eu l'idée ajouter d'autres paramètres d'apprentissages, Il faut consulté les liens de Dylan pour bien les utilisés 
 
+(Dylan) : Implémentation de la méthode findBestTreshold qui prend en argument le début des treshold à tester, et le pas. Cette méthode nous permettra de trouver le Treshold optimal, afin d'obtenir le meilleur score sur notre jeu de donnée.
+Méthode qui subira des modifications avec l'ajout des méthodes Kfold de Yannis.
+
 25/01 : 
 
 (Equipe) : Séance en groupe avec le prof, il nous a aiguiller sur de la reconnaissance d'image par convolution, avec gradient etc.. 
 Dylan : Implémenter les algo dans cette pages https://learnopencv.com/histogram-of-oriented-gradients/ 
 ils vont nous permettre de détecter les contours
 Yannis : Faire la fonction de batch des tests
+
+(Dylan) : Implémentation de deux méthodes findOutLinesOfImage, et findOutLinesOfImage2 qui sont censés détecter les contours à l'intérieur des images. Ces méthodes sont obsolètes car soit pas très utile, soit ne fonctionne pas. Je vais donc me concentrer à implémenter la détection de contours d'après l'histogramme de gradients et le filtre de Sobel comme nous l'a conseillé le prof.
+
 
 
 
