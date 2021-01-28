@@ -194,8 +194,72 @@ def findOutLinesOfImage2(pathName):
     im3.putpixel((x,y),(r,v,b))
     im3.save("T:\Seville_contours.png")
     im3.show()
-
     
+#Détection de contours  
+
+#image réduite
+import cv2 as cv
+img = cv.imread("Data/Mer/Mer_1/aaaaa.jpeg",0)
+img= cv.GaussianBlur(img, (3, 3), 0)
+sobelx = cv.Sobel(img,cv.CV_64F,1,0,ksize=5)
+sobely = cv.Sobel(img,cv.CV_64F,0,1,ksize=5)
+abs_grad_x = cv.convertScaleAbs(sobelx)
+abs_grad_y = cv.convertScaleAbs(sobely)
+modgrad = cv.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
+plt.subplot(2,2,2),plt.imshow(modgrad,cmap = 'gray')
+plt.title('image réduite'), plt.xticks([]), plt.yticks([])
+plt.show()
+
+#Gradients d'image réduite
+img = cv.imread("Data/Mer/Mer_1/aaaaa.jpeg",0)
+img= cv.GaussianBlur(img, (3, 3), 0)
+sobelx = cv.Sobel(img,cv.CV_64F,1,0,ksize=5)
+sobely = cv.Sobel(img,cv.CV_64F,0,1,ksize=5)
+pas=3
+X = np.arange(0, img.shape[1], pas)
+Y = np.arange(0, img.shape[0], pas)
+U, V = np.meshgrid(X, Y)
+gx=np.float32(sobelx)[0:img.shape[0]:pas,0:img.shape[1]:pas]
+print (gx.shape)
+print (U.shape)
+gy=np.float32(sobely)[0:img.shape[0]:pas,0:img.shape[1]:pas]
+fig, ax = plt.subplots()
+q = ax.quiver(X, Y,gx , gy, scale=100000)
+plt.show()
+
+
+#image non réduite
+img = cv.imread("Data/Mer/Mer_1/838s.jpg",0)
+img= cv.GaussianBlur(img, (3, 3), 0)
+sobelx = cv.Sobel(img,cv.CV_64F,1,0,ksize=5)
+sobely = cv.Sobel(img,cv.CV_64F,0,1,ksize=5)
+abs_grad_x = cv.convertScaleAbs(sobelx)
+abs_grad_y = cv.convertScaleAbs(sobely)
+modgrad = cv.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
+plt.subplot(2,2,2),plt.imshow(modgrad,cmap = 'gray')
+plt.title('image non réduite'), plt.xticks([]), plt.yticks([])
+plt.show()
+
+#Gradients d'image non réduite
+img = cv.imread("Data/Mer/Mer_1/838s.jpg",0)
+img= cv.GaussianBlur(img, (3, 3), 0)
+sobelx = cv.Sobel(img,cv.CV_64F,1,0,ksize=5)
+sobely = cv.Sobel(img,cv.CV_64F,0,1,ksize=5)
+pas=3
+X = np.arange(0, img.shape[1], pas)
+Y = np.arange(0, img.shape[0], pas)
+U, V = np.meshgrid(X, Y)
+gx=np.float32(sobelx)[0:img.shape[0]:pas,0:img.shape[1]:pas]
+print (gx.shape)
+print (U.shape)
+gy=np.float32(sobely)[0:img.shape[0]:pas,0:img.shape[1]:pas]
+fig, ax = plt.subplots()
+q = ax.quiver(X, Y,gx , gy, scale=100000)
+plt.show()
+
+
+#On  voit une grosse différence sur la qualité des contours d'image lorsque l'image est retravaillé ou pas.
+
 
 
 # A partir d'ici j'ai betement copier coller le TP pour faire marcher le truc
@@ -236,18 +300,12 @@ def findBestThreshold(debut, step):
 
 
 
-findOutLinesOfImage2("Data/Mer/Mer_1/aaaaa.jpeg")
+##findOutLinesOfImage2("Data/Mer/Mer_1/aaaaa.jpeg")
         
         
 #v = findBestThreshold(1000, 250)
 #print(v)
 #a,b = prepareTabForLearning(image_listM,image_listNM,1750)
 #print(makeTraining(a, b))
-
-
-
-
-
-
 
 
