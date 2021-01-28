@@ -65,5 +65,17 @@ Yannis : Faire la fonction de batch des tests
 (Dylan) : Implémentation de deux méthodes findOutLinesOfImage, et findOutLinesOfImage2 qui sont censés détecter les contours à l'intérieur des images. Ces méthodes sont obsolètes car soit pas très utile, soit ne fonctionne pas. Je vais donc me concentrer à implémenter la détection de contours d'après l'histogramme de gradients et le filtre de Sobel comme nous l'a conseillé le prof.
 
 
+29/01 :
 
+(Dylan) : Implémentation de la détéction du contour d'images. J'ai aussi essayé de montrer la différence obtenu lorsqu'on applique cette méthode à une image réduite, et sur une image non réduite.
+On observe une grosse différence qualité de contours, qu'on retrouve notamment sur le tableau de Gradient. Cela peut se taduire soit par une mauvaise méthode de ma part (qui n'est pas vraiment la mienne d'ailleurs),
+soit cela vient du fait que l'image est réduite, ce qui me prait très plausibke étant donné qu'il est plus difficile de discerner les contpurs d'une image lorsqu'elle est pixélisé.
+A disucter donc entre nous, peut-être essayer de moins réduire les images, ou alors détécter les contours avant de les réduire, je ne sais pas ce sont des propositions ^^.
+
+Pour télécharger le module Open source utiliser (ce module apparait dans la page montrée par le prof lors de la séance du 25/01) :
+    - Dans l'invite de commande Anaconda, soit CMD.exe Prompt
+    - Ecrire les commandes
+    -conda update anaconda-navigator  
+    -conda update navigator-updater 
+    -pip install opencv-python
 
