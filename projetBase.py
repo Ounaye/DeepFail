@@ -72,7 +72,7 @@ def analyseImageBlue(imageArray):
         indexJ = 0
     return nbrBlue
 
-def analyseAllImg(threshold,tabImg):
+def analyseImg(threshold,tabImg):
     if(analyseImageBlue(tabImg) > threshold):
         return 1
     else:
@@ -88,20 +88,17 @@ from skimage import io
 import skimage.transform as sky_trfm
 import numpy as np
 
-from skimage import feature
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 
 # Si on enlève le filtrage .jpeg 
 # Il a besoin de format de lecture en arg
 
 
-list_filesNM = glb.glob("Data/Ailleurs/**/*.jpeg", recursive=True)
+list_filesNM = glb.glob("DataNonRéduite/Ailleurs/**/*.jpeg", recursive=True)
 image_listNM = []
 for filename in list_filesNM:
         image_listNM.append(io.imread(filename))
 
-list_filesM = glb.glob("Data/Mer/**/*.jpeg", recursive=True)
+list_filesM = glb.glob("DataNonRéduite/Mer/**/*.jpeg", recursive=True)
 image_listM = []
 for filename in list_filesM:
         image_listM.append(io.imread(filename))
@@ -125,140 +122,74 @@ def prepareTabForLearning(tabOfM,tabOfNM,threshold):
     tabOfResult = np.arange((len(tabOfM)+len(tabOfNM)))
     index = 0
     for i in tabOfM: #1 à 4 secondes d'exécution
-        tabOfData[index] = analyseAllImg(threshold,i)# Modifier cette fonction
+        grad,sobX,sobY = detectForme(i)
+        tabOfData[index,0] = analyseImg(threshold,i)# Modifier cette fonction
+        tabOfData[index,1] = sobX
         tabOfResult[index] = 1
         index +=1
     for i in tabOfNM:
-        tabOfData[index] = analyseAllImg(threshold,i)# Modifier cette fonction
+        tabOfData[index] = analyseImg(threshold,i)# Modifier cette fonction
         tabOfResult[index] = -1
         index +=1
     return (tabOfData,tabOfResult)
 
-
-def findOutLinesOfImage(pathName):
-#---------- Read Image ----------#
-    img = mpimg.imread(pathName)
-    print (type(img))
-    print (img.shape, img.dtype)
-    print (img[63,63,0],img[63,63,1],img[63,63,2])
-    print (img.max(),img.min())
-
-    M = np.zeros((img.shape[0],img.shape[1]))
-    print (M)
-    M[:,:] = img[:,:,0]
-    print (M.max(),M.min(),M.shape)
-    plt.imshow(M, cmap = plt.get_cmap('gray'))
-    plt.title("Lena Picture")
-    plt.savefig("Lena.png")
-    plt.show()
-#---------- Apply Canny  ----------#
-    edges = feature.canny(M, sigma=2)
-    fig, ax = plt.subplots()
-    ax.imshow(edges, cmap=plt.cm.gray, interpolation='nearest')
-    #ax.axis('off')
-    ax.set_title('Canny Edge Detection')
-    plt.savefig("LenaCanny.png")
-    plt.show()
-    
-
-def findOutLinesOfImage2(pathName):
-
-    im1 = Image.open(pathName)
-    im2 = Image.new("RGB",(64,64))
-    im3 = Image.new("RGB",(64,64))
-    for y in range(64):
-        for x in range(64):
-            p = im1.getpixel((x,y))        
-            r = (p[0]+p[1]+p[2])/3
-            v = r
-            b = r
-            im2.putpixel((x,y),(r,v,b))
-    for y in range(0,63):
-        print (y)
-        for x in range(0,63):
-            pix0 = im2.getpixel((x,y))
-            pix1 = im2.getpixel((x-1,y-1))
-            pix2 = im2.getpixel((x,y-1))
-            pix3 = im2.getpixel((x+1,y-1))
-            pix4 = im2.getpixel((x-1,y))
-            pix5 = im2.getpixel((x+1,y))
-            pix6 = im2.getpixel((x-1,y+1))
-            pix7 = im2.getpixel((x,y+1))
-            pix8 = im2.getpixel((x+1,y+1))
-            r = 8*pix0[0]-pix1[0]-pix2[0]- pix3[0]-pix4[0]-pix5[0]-pix6[0]-pix7[0]-pix8[0]
-        r = r/1
-        r = r+128
-        r = 255-r
-        v = r
-        b = r
-    im3.putpixel((x,y),(r,v,b))
-    im3.save("T:\Seville_contours.png")
-    im3.show()
     
 #Détection de contours  
 
 #image réduite
 import cv2 as cv
-img = cv.imread("Data/Mer/Mer_1/aaaaa.jpeg",0)
-img= cv.GaussianBlur(img, (3, 3), 0)
-sobelx = cv.Sobel(img,cv.CV_64F,1,0,ksize=5)
-sobely = cv.Sobel(img,cv.CV_64F,0,1,ksize=5)
-abs_grad_x = cv.convertScaleAbs(sobelx)
-abs_grad_y = cv.convertScaleAbs(sobely)
-modgrad = cv.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
-plt.subplot(2,2,2),plt.imshow(modgrad,cmap = 'gray')
-plt.title('image réduite'), plt.xticks([]), plt.yticks([])
-plt.show()
-
-#Gradients d'image réduite
-img = cv.imread("Data/Mer/Mer_1/aaaaa.jpeg",0)
-img= cv.GaussianBlur(img, (3, 3), 0)
-sobelx = cv.Sobel(img,cv.CV_64F,1,0,ksize=5)
-sobely = cv.Sobel(img,cv.CV_64F,0,1,ksize=5)
-pas=3
-X = np.arange(0, img.shape[1], pas)
-Y = np.arange(0, img.shape[0], pas)
-U, V = np.meshgrid(X, Y)
-gx=np.float32(sobelx)[0:img.shape[0]:pas,0:img.shape[1]:pas]
-print (gx.shape)
-print (U.shape)
-gy=np.float32(sobely)[0:img.shape[0]:pas,0:img.shape[1]:pas]
-fig, ax = plt.subplots()
-q = ax.quiver(X, Y,gx , gy, scale=100000)
-plt.show()
+import time
 
 
-#image non réduite
-img = cv.imread("Data/Mer/Mer_1/838s.jpg",0)
-img= cv.GaussianBlur(img, (3, 3), 0)
-sobelx = cv.Sobel(img,cv.CV_64F,1,0,ksize=5)
-sobely = cv.Sobel(img,cv.CV_64F,0,1,ksize=5)
-abs_grad_x = cv.convertScaleAbs(sobelx)
-abs_grad_y = cv.convertScaleAbs(sobely)
-modgrad = cv.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
-plt.subplot(2,2,2),plt.imshow(modgrad,cmap = 'gray')
-plt.title('image non réduite'), plt.xticks([]), plt.yticks([])
-plt.show()
+def detectForme(img):
+    img = cv.imread(img,0)
+    img= cv.GaussianBlur(img, (3, 3), 0)
+    sobelx = cv.Sobel(img,cv.CV_64F,1,0,ksize=5)
+    sobely = cv.Sobel(img,cv.CV_64F,0,1,ksize=5)
+    abs_grad_x = cv.convertScaleAbs(sobelx)
+    abs_grad_y = cv.convertScaleAbs(sobely)
+    modgrad = cv.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
+    #On ajoute nos deux images l'une sur l'autre
+    return modgrad,sobelx,sobely
 
-#Gradients d'image non réduite
-img = cv.imread("Data/Mer/Mer_1/838s.jpg",0)
-img= cv.GaussianBlur(img, (3, 3), 0)
-sobelx = cv.Sobel(img,cv.CV_64F,1,0,ksize=5)
-sobely = cv.Sobel(img,cv.CV_64F,0,1,ksize=5)
-pas=3
-X = np.arange(0, img.shape[1], pas)
-Y = np.arange(0, img.shape[0], pas)
-U, V = np.meshgrid(X, Y)
-gx=np.float32(sobelx)[0:img.shape[0]:pas,0:img.shape[1]:pas]
-print (gx.shape)
-print (U.shape)
-gy=np.float32(sobely)[0:img.shape[0]:pas,0:img.shape[1]:pas]
-fig, ax = plt.subplots()
-q = ax.quiver(X, Y,gx , gy, scale=100000)
+def makeHistogramOfGrad(img,pas,nbrBarre):
+    tabHistogramme = np.zeros(nbrBarre)
+    for i in range(0,64,pas):
+        for j in range(0,64,pas):
+                analyseGradImg(img, tabHistogramme,nbrBarre,i,j,pas)
+    return tabHistogramme
+        
+def analyseGradImg(img,tabHist,nbrBarre,xDebut,yDebut,pas):
+    img= cv.GaussianBlur(img, (3, 3), 0)
+    sobelx = cv.Sobel(img,cv.CV_64F,1,0,ksize=3)
+    sobely = cv.Sobel(img,cv.CV_64F,0,1,ksize=3)
+    mag, angle = cv.cartToPolar(sobelx, sobely, angleInDegrees=True)
+    for i in range(xDebut,xDebut+pas):
+        for j in range(yDebut,yDebut+pas):
+            a = angle[i,j]/(180/nbrBarre)
+            b = int(a) % 10
+            if(a == b ):
+                 tabHist[b] += mag[i,j]
+            else:
+                tabHist[b] += mag[i,j]*(a - b)
+                tabHist[(b+1)%10] += mag[i,j]* (a - b + 1)
+            
+            
+            
+imgdaz = cv.imread("Data/Mer/Mer_1/aaaaa.jpeg",0)
+tab  = makeHistogramOfGrad(imgdaz,8,10)
+
+data = tab
+
+plt.hist(data)
+
+plt.title('How to plot a simple histogram in matplotlib ?', fontsize=10)
+
+plt.savefig("plot_simple_histogramme_matplotlib_01.png")
+
 plt.show()
 
 
-#On  voit une grosse différence sur la qualité des contours d'image lorsque l'image est retravaillé ou pas.
 
 
 
@@ -271,14 +202,14 @@ from sklearn.metrics import accuracy_score
 
 def makeTraining(tabData,tabResult):
     
-    #On fait nos samples test/entrainement    
+    # On fait nos samples test/entrainement    
     X_train, X_test, y_train, y_test = train_test_split(tabData, tabResult, test_size=0.20) 
     
-    #On entraine
+    # On entraine
     classifieur = GaussianNB()
     classifieur.fit(X_train, y_train)
     
-    #On test
+    # On test
     y_predits = classifieur.predict(X_test)
     return accuracy_score(y_test,y_predits)
     
@@ -296,16 +227,8 @@ def findBestThreshold(debut, step):
             maxTreshold = i
 
     return maxTreshold
+
+
+# a,b = prepareTabForLearning(image_listM,image_listNM, 1750)
+# makeTraining(a, b)
             
-
-
-
-##findOutLinesOfImage2("Data/Mer/Mer_1/aaaaa.jpeg")
-        
-        
-#v = findBestThreshold(1000, 250)
-#print(v)
-#a,b = prepareTabForLearning(image_listM,image_listNM,1750)
-#print(makeTraining(a, b))
-
-
