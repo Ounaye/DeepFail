@@ -79,3 +79,9 @@ Pour télécharger le module Open source utiliser (ce module apparait dans la pa
     -conda update navigator-updater 
     -pip install opencv-python
 
+
+01/02 : 
+
+(Equipe) : On a implementer la représentation en histogramme de nos gradients de vecteur, on a pas eu le temps de tester ce modèle à l'apprentissage.
+On se donne juste comme objectif de nettoyer le code et de revenir lundi avec des idées d'améliorations
+
