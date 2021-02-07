@@ -85,3 +85,7 @@ Pour télécharger le module Open source utiliser (ce module apparait dans la pa
 (Equipe) : On a implementer la représentation en histogramme de nos gradients de vecteur, on a pas eu le temps de tester ce modèle à l'apprentissage.
 On se donne juste comme objectif de nettoyer le code et de revenir lundi avec des idées d'améliorations
 
+07/02 : 
+
+(Yannis) Réorganisation du code en plusieurs fichiers pour plus de lisibilité
+
