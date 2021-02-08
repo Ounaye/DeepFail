@@ -11,31 +11,78 @@ import numpy as np
 import fileManager
 import advancedImageTraitement as AIT
 
+from skimage.feature import hog
+
 image_listNM, image_listM = fileManager.makeTabOfImg()
 
 
 def prepareTabForLearning(tabOfM,tabOfNM,threshold):
-    tabOfData = zeros((len(tabOfM)+len(tabOfNM),11))
+    tabOfData = zeros((len(tabOfM)+len(tabOfNM),129))
     tabOfResult = np.arange((len(tabOfM)+len(tabOfNM)))
     index = 0
-    for i in tabOfM: #1 à 4 secondes d'exécution
-        hist = AIT.makeHistogramOfGrad(i,8,10)
-        tabOfData[index,0] = BIT.analyseImg(threshold,i)
-        for i in range(10):
-            tabOfData[index,i+1] = hist[i]
+    for i in tabOfM:
+        otherPara = zeros(1)
+        otherPara[0] = BIT.analyseImg(threshold,i)
+        fd, hog_image = hog(i, orientations=8, pixels_per_cell=(16, 16),
+                    cells_per_block=(1, 1), visualize=True, multichannel=True)
+        tabOfData[index] = np.concatenate((otherPara,fd))
         tabOfResult[index] = 1
         index +=1
     for i in tabOfNM:
-        tabOfData[index,0] = BIT.analyseImg(threshold,i)
-        for i in range(10):
-            tabOfData[index,i+1] = hist[i]
-        tabOfResult[index] = 1
+        otherPara = zeros(1)
+        otherPara[0] = BIT.analyseImg(threshold,i)
+        fd, hog_image = hog(i, orientations=8, pixels_per_cell=(16, 16),
+                    cells_per_block=(1, 1), visualize=True, multichannel=True)
+        tabOfData[index] = np.concatenate((otherPara,fd))
         tabOfResult[index] = -1
         index +=1
     return (tabOfData,tabOfResult)
 
     
 
+
+def determineCentreGrav(tabOfData,tabOfResult):
+    centerOfTrue = zeros(11)#Care
+    nbrOfTrue = 0
+    centerOfFalse = zeros(11)
+    nbrOfFalse = 0
+    #Problème avec les nombres négatifs
+    for i in range(len(tabOfData)):
+        if (tabOfResult[i] == 1):
+            nbrOfTrue += 1
+            centerOfTrue += tabOfData[i]
+        else:
+            nbrOfFalse +=1
+            centerOfFalse += tabOfData[i]
+            
+    return (centerOfTrue/nbrOfTrue,centerOfFalse/nbrOfFalse)
+
+
+def prendDecision(centreTrue,centreFalse,oneData):
+    dist1 = np.linalg.norm(centreTrue-oneData)
+    dist2 = np.linalg.norm(centreFalse-oneData)
+    if dist1 > dist2:
+        return -1
+    else:
+        return 1
+        
+    
+def makeApprentissageMiddle(xTrain,yTrain,xTest,yTest):
+     mer,nMer = determineCentreGrav(xTrain, yTrain)
+     goodGuess = 0
+     badGuess = 0
+     for i in range(len(xTest)):
+         guess = prendDecision(mer,nMer,xTest[i])
+         if(guess == yTest[i]):
+             goodGuess += 1
+         else:
+            badGuess += 1
+     print(goodGuess/len(xTest))
+     print(badGuess/len(xTest))
+             
+         
+        
+    
 
 
 
@@ -74,7 +121,10 @@ def findBestThreshold(debut, step):
 
     return maxTreshold
 
+for i in range(10):
+        
+    a,b = prepareTabForLearning(image_listM,image_listNM, 1750)
+    print(makeTraining(a,b))
 
-a,b = prepareTabForLearning(image_listM,image_listNM, 1750)
-makeTraining(a, b)
+
             
