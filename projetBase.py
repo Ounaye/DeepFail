@@ -15,17 +15,21 @@ image_listNM, image_listM = fileManager.makeTabOfImg()
 
 
 def prepareTabForLearning(tabOfM,tabOfNM,threshold):
-    tabOfData = zeros((len(tabOfM)+len(tabOfNM),3))
+    tabOfData = zeros((len(tabOfM)+len(tabOfNM),11))
     tabOfResult = np.arange((len(tabOfM)+len(tabOfNM)))
     index = 0
     for i in tabOfM: #1 à 4 secondes d'exécution
-        grad,sobX,sobY = AIT.detectForme(i)
-        tabOfData[index,0] = BIT.analyseImg(threshold,i)# Modifier cette fonction
-        tabOfData[index,1] = sobX
+        hist = AIT.makeHistogramOfGrad(i,8,10)
+        tabOfData[index,0] = BIT.analyseImg(threshold,i)
+        for i in range(10):
+            tabOfData[index,i+1] = hist[i]
         tabOfResult[index] = 1
         index +=1
     for i in tabOfNM:
-        tabOfData[index] = BIT.analyseImg(threshold,i)# Modifier cette fonction
+        tabOfData[index,0] = BIT.analyseImg(threshold,i)
+        for i in range(10):
+            tabOfData[index,i+1] = hist[i]
+        tabOfResult[index] = 1
         tabOfResult[index] = -1
         index +=1
     return (tabOfData,tabOfResult)
