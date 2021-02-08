@@ -89,3 +89,18 @@ On se donne juste comme objectif de nettoyer le code et de revenir lundi avec de
 
 (Yannis) Réorganisation du code en plusieurs fichiers pour plus de lisibilité
 
+
+08/02:
+
+(Equipe) : On a réussi à corriger le problème au niveau des histogrammes de gradiant. A la fin de la séance le professeur nous a donné une méthode 
+qui fait les gradients ainsi que l'histogramme mieux que nous. Les anciennes fonctions sont inutiles. De plus on a écrit un nouveau classifieur basé sur 
+les points les plus proches. On a aussi travaillé sur comment faire plusieurs classifieur sur les mêmes ensembles
+A faire : 
+Dylan Doit implémenter des fonctions qui permettent d'utiliser plusieurs classifieur en même temps
+Yannis Doit écrire son classifieur sous forme de classe pour permettre de l'implémenter dans la fonction que va faire Dylan
+
+Note : Yannis ne sauras pas là à la séance du  15/02
+
+
+
+
