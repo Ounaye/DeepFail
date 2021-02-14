@@ -38,50 +38,11 @@ def prepareTabForLearning(tabOfM,tabOfNM,threshold):
         index +=1
     return (tabOfData,tabOfResult)
 
-    
+import LearnByMiddle as LBM
 
+from sklearn.utils.estimator_checks import check_estimator
 
-def determineCentreGrav(tabOfData,tabOfResult):
-    centerOfTrue = zeros(11)#Care
-    nbrOfTrue = 0
-    centerOfFalse = zeros(11)
-    nbrOfFalse = 0
-    #Problème avec les nombres négatifs
-    for i in range(len(tabOfData)):
-        if (tabOfResult[i] == 1):
-            nbrOfTrue += 1
-            centerOfTrue += tabOfData[i]
-        else:
-            nbrOfFalse +=1
-            centerOfFalse += tabOfData[i]
-            
-    return (centerOfTrue/nbrOfTrue,centerOfFalse/nbrOfFalse)
-
-
-def prendDecision(centreTrue,centreFalse,oneData):
-    dist1 = np.linalg.norm(centreTrue-oneData)
-    dist2 = np.linalg.norm(centreFalse-oneData)
-    if dist1 > dist2:
-        return -1
-    else:
-        return 1
-        
-    
-def makeApprentissageMiddle(xTrain,yTrain,xTest,yTest):
-     mer,nMer = determineCentreGrav(xTrain, yTrain)
-     goodGuess = 0
-     badGuess = 0
-     for i in range(len(xTest)):
-         guess = prendDecision(mer,nMer,xTest[i])
-         if(guess == yTest[i]):
-             goodGuess += 1
-         else:
-            badGuess += 1
-     print(goodGuess/len(xTest))
-     print(badGuess/len(xTest))
-             
-         
-        
+check_estimator(LBM.LearnByMiddle()) 
     
 
 
@@ -121,10 +82,10 @@ def findBestThreshold(debut, step):
 
     return maxTreshold
 
-for i in range(10):
+# for i in range(10):
         
-    a,b = prepareTabForLearning(image_listM,image_listNM, 1750)
-    print(makeTraining(a,b))
+#     a,b = prepareTabForLearning(image_listM,image_listNM, 1750)
+#     print(makeTraining(a,b))
 
 
             
