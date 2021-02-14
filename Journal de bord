@@ -101,6 +101,12 @@ Yannis Doit écrire son classifieur sous forme de classe pour permettre de l'imp
 
 Note : Yannis ne sauras pas là à la séance du  15/02
 
+14/02 : 
 
+(Yannis) J'ai presque réussi à rendre mon premier classifieur compatible avec la demande. Je suis bloqué sur une syntaxe python que je ne comprend pas.
+C'est la ligne 53 du fichier LearnByMiddle. Le tableau Guess contient la prédiction à chaque élement de l'ensemble de test. 
+Je ne comprend pas du tout la syntaxe, si il n'arrive pas à trouver l'erreur peut être lui demander d'expliquer ce que veut dire cette syntaxe.
+Je comprend qu'il récupère un tableau y qui est une propriété de la classe. Par contre ce y_[guess] je ne le comprend pas.
+Voilà, objectif pour toi c'est de faire des apprentissages avec plus d'élements pour chaque image ( tu peux rajouter l'histogramme par exemple )
 
 
