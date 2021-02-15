@@ -11,48 +11,43 @@ import numpy as np
 import fileManager
 import advancedImageTraitement as AIT
 
-from skimage.feature import hog
-
 image_listNM, image_listM = fileManager.makeTabOfImg()
 
 
 def prepareTabForLearning(tabOfM,tabOfNM,threshold):
-    tabOfData = zeros((len(tabOfM)+len(tabOfNM),129))
+    tabOfData = zeros((len(tabOfM)+len(tabOfNM),11))
     tabOfResult = np.arange((len(tabOfM)+len(tabOfNM)))
     index = 0
-    for i in tabOfM:
-        otherPara = zeros(1)
-        otherPara[0] = BIT.analyseImg(threshold,i)
-        fd, hog_image = hog(i, orientations=8, pixels_per_cell=(16, 16),
-                    cells_per_block=(1, 1), visualize=True, multichannel=True)
-        tabOfData[index] = np.concatenate((otherPara,fd))
+    for i in tabOfM: #1 à 4 secondes d'exécution
+        hist = AIT.makeHistogramOfGrad(i,8,10)
+        tabOfData[index,0] = BIT.analyseImg(threshold,i)
+        for i in range(10):
+            tabOfData[index,i+1] = hist[i]
         tabOfResult[index] = 1
         index +=1
     for i in tabOfNM:
-        otherPara = zeros(1)
-        otherPara[0] = BIT.analyseImg(threshold,i)
-        fd, hog_image = hog(i, orientations=8, pixels_per_cell=(16, 16),
-                    cells_per_block=(1, 1), visualize=True, multichannel=True)
-        tabOfData[index] = np.concatenate((otherPara,fd))
+        tabOfData[index,0] = BIT.analyseImg(threshold,i)
+        for i in range(10):
+            tabOfData[index,i+1] = hist[i]
+        tabOfResult[index] = 1
         tabOfResult[index] = -1
         index +=1
     return (tabOfData,tabOfResult)
 
-import LearnByMiddle as LBM
-
-from sklearn.utils.estimator_checks import check_estimator
-
-check_estimator(LBM.LearnByMiddle()) 
     
+
 
 
 
 # A partir d'ici j'ai betement copier coller le TP pour faire marcher le truc
 
-
+from sklearn.linear_model import LogisticRegression
+import LearnByMiddle.py as LinearClassifier
 from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score
+from sklearn.ensemble import  VotingClassifier
 
 def makeTraining(tabData,tabResult):
     
@@ -66,7 +61,21 @@ def makeTraining(tabData,tabResult):
     # On test
     y_predits = classifieur.predict(X_test)
     return accuracy_score(y_test,y_predits)
+
+
+
+def makeTrainingWithVoting():
+    clf1 = GaussianNB()
+    clf2 = LogisticRegression(multi_class='multinomial', random_state=1)
+    clf3 = DecisionTreeClassifier(random_state=0)
+    clf4 = LearnByMiddle()
     
+     X_train, X_test, y_train, y_test = train_test_split(tabData, tabResult, test_size=0.20)
+    
+    eclf = VotingClassifier(estimators = [("gnb", clf1), ("lr", clf2), ("dtc", clf3), ("lbm",clf4)], voting='hard')
+    eclf.fit(X_train, y_train)
+    print(eclf.predict(X_test))
+    ## weights pour ceux qui font le moins d'erreur
     
 def findBestThreshold(debut, step):
     maxTreshold = -800000
@@ -82,10 +91,7 @@ def findBestThreshold(debut, step):
 
     return maxTreshold
 
-# for i in range(10):
-        
-#     a,b = prepareTabForLearning(image_listM,image_listNM, 1750)
-#     print(makeTraining(a,b))
 
-
+a,b = prepareTabForLearning(image_listM,image_listNM, 1750)
+prin(makeTraining(a, b))
             
