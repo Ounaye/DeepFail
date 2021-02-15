@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun Feb 14 11:03:22 2021
-
 @author: Ounaye
 """
 import numpy as np
@@ -34,6 +33,9 @@ class LearnByMiddle(BaseEstimator, ClassifierMixin):
         # Return the classifier
         return self
 
+
+#prend en entre un classifieur et un ensemble de donnée X
+#prédire les étiquettes de X
     def predict(self, X):
 
         # Check is fit had been called
@@ -42,9 +44,14 @@ class LearnByMiddle(BaseEstimator, ClassifierMixin):
         # Input validation
         X = check_array(X)
         
+        
+        #erreur en fonction du type de X, si X est une liste c'est bon, si c'est un numpyArray changer len(X) par X.shape[0]
         guess = np.zeros(len(X))
         
+        
+        #peut-etre modifier y_[guess]
         for i in range(len(X)):
+            #pour debugger, afficher la taille de self.merClass
             guess[i] = LearnByMiddle.prendDecision(self.merClass_,self.nonMerClass_,X[i])
         
         # Dans le cas où on veut juste que ça marche remplacer le return
@@ -55,7 +62,14 @@ class LearnByMiddle(BaseEstimator, ClassifierMixin):
         # closest = np.argmin(euclidean_distances(X, self.X_), axis=1)
         # return self.y_[guess]
         
+        #peut-etre renvoyer juste guess
+        # peut etre renvoyer juste y_ et le modifier en conséquences à la ligne 55
+        
+        # Dans l'exemple closest récupère des indices, alors que le guess de notre fonction ne possède que des decisions
+        #La syntaxe correspond à donner aux tableaux une liste d'indice.
         return self.y_[guess]
+    
+    # vérifier si predict doit renvoyer une ou plusieurs valeurs.
     
     # My code
 
@@ -75,7 +89,7 @@ class LearnByMiddle(BaseEstimator, ClassifierMixin):
                 
         return (centerOfTrue/nbrOfTrue,centerOfFalse/nbrOfFalse)
 
-
+# s'assurer que centreTrue, centreFalse et oneData ont la même taille
     def prendDecision(centreTrue,centreFalse,oneData):
         dist1 = np.linalg.norm(centreTrue-oneData)
         dist2 = np.linalg.norm(centreFalse-oneData)
