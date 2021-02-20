@@ -12,10 +12,8 @@ from sklearn.metrics import euclidean_distances
 class LearnByMiddle(BaseEstimator, ClassifierMixin):
     
     # Code found at : https://scikit-learn.org/stable/developers/develop.html?fbclid=IwAR3oTTLl_HjIZxfJOsQabMN2D09KQGhfpuSqxK-2bCd1ZkyKedw6lqDSShE
-    def __init__(self, demo_param='demo', merClass_ = 0, nonMerClass_ = 0):
+    def __init__(self, demo_param='demo'):
         self.demo_param = demo_param
-        self.merClass_ = merClass_
-        self.nonMerClass_ = nonMerClass_
 
     def fit(self, X, y):
 
@@ -26,8 +24,8 @@ class LearnByMiddle(BaseEstimator, ClassifierMixin):
         
         
         a,b = LearnByMiddle.determineCentreGrav(X, y)
-        self.merClass_ = a
-        self.nonMerClass_ = b
+        self.merMiddle_ = a
+        self.nonMerMiddle_ = b
         self.X_ = X
         self.y_ = y
         # Return the classifier
@@ -45,46 +43,31 @@ class LearnByMiddle(BaseEstimator, ClassifierMixin):
         X = check_array(X)
         
         
-        #erreur en fonction du type de X, si X est une liste c'est bon, si c'est un numpyArray changer len(X) par X.shape[0]
-        guess = np.zeros(len(X))
+        guess = np.zeros(len(X),dtype=int)
         
         
         #peut-etre modifier y_[guess]
         for i in range(len(X)):
             #pour debugger, afficher la taille de self.merClass
-            guess[i] = LearnByMiddle.prendDecision(self.merClass_,self.nonMerClass_,X[i])
+            guess[i] = LearnByMiddle.prendDecision(self.merMiddle_,self.nonMerMiddle_,X[i])
         
-        # Dans le cas où on veut juste que ça marche remplacer le return
-        # par la ligne en dessous
-        # return guess
-        
-        # les lignes que j'ai suprimer par rapport à l'exemple : 
-        # closest = np.argmin(euclidean_distances(X, self.X_), axis=1)
-        # return self.y_[guess]
-        
-        #peut-etre renvoyer juste guess
-        # peut etre renvoyer juste y_ et le modifier en conséquences à la ligne 55
-        
-        # Dans l'exemple closest récupère des indices, alors que le guess de notre fonction ne possède que des decisions
-        #La syntaxe correspond à donner aux tableaux une liste d'indice.
-        return self.y_[guess]
-    
-    # vérifier si predict doit renvoyer une ou plusieurs valeurs.
+        return guess
+
     
     # My code
 
     def determineCentreGrav(tabOfData,tabOfResult):
-        centerOfTrue = np.zeros(len(tabOfData[0]))#Care
+        centerOfTrue = np.zeros(len(tabOfData[0]))
         nbrOfTrue = 0
         centerOfFalse = np.zeros(len(tabOfData[0]))
         nbrOfFalse = 0
         #Problème avec les nombres négatifs
         for i in range(len(tabOfData)):
             if (tabOfResult[i] == 1):
-                nbrOfTrue += 1
+                nbrOfTrue += 1.0
                 centerOfTrue += tabOfData[i]
             else:
-                nbrOfFalse +=1
+                nbrOfFalse +=1.0
                 centerOfFalse += tabOfData[i]
                 
         return (centerOfTrue/nbrOfTrue,centerOfFalse/nbrOfFalse)
@@ -94,10 +77,10 @@ class LearnByMiddle(BaseEstimator, ClassifierMixin):
         dist1 = np.linalg.norm(centreTrue-oneData)
         dist2 = np.linalg.norm(centreFalse-oneData)
         if dist1 > dist2:
-            return -1
+            return 0
         else:
             return 1
-            
-                 
-         
         
+test = LearnByMiddle()
+test.fit([[0,0],[1,1]],[1,-1])
+print(test.predict([[0,0],[0,0]]))
