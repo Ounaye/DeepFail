@@ -111,10 +111,20 @@ Voilà, objectif pour toi c'est de faire des apprentissages avec plus d'élement
 
 15\02 :
 
-(Dylan) : implémentation du classifieur ensembliste VotingClassifier, avec les classifieurs DecisionTreeClassifier, GaussianNB, LogisticRegression, LearnByMiddle. Beaucoup d'infos obtenus par la prof sur le classifieur ensembliste notamment sur des attributs tels que la manière de voter par les classifieurs, ou encore le poids des votes (donner plus d'importances aux classifieurs qui ont de bonnes prédictions).
-De plus, j'ai pas mal discuté avec la prof pour essayer de comprendre d'ou venait l'erreur sur la méthode predict. Effectivement dans l'exemple de la doc y_[closest] parait particulier. En fait closest est une liste d'indice. Apparemment un tableau peut prendre une liste d'indices pour récupérer toutes les valeurs de ces indices.
-Dans notre cas le tableau guess n'est rempli que de décisions donc de 1 ou de -1, ainsi le tableau y_ ne revoie pas grand chose. Par ailleurs la prof a aussi remarqué selon l'exemple de la doc que renvoyer seulement le tableau rendrait la méthode predict bonne.
+(Dylan) : implémentation du classifieur ensembliste VotingClassifier, avec les classifieurs DecisionTreeClassifier, GaussianNB, LogisticRegression, LearnByMiddle. 
+Beaucoup d'infos obtenus par la prof sur le classifieur ensembliste notamment sur des attributs tels que la manière de voter par les classifieurs, 
+ou encore le poids des votes (donner plus d'importances aux classifieurs qui ont de bonnes prédictions).
+De plus, j'ai pas mal discuté avec la prof pour essayer de comprendre d'ou venait l'erreur sur la méthode predict.
+Effectivement dans l'exemple de la doc y_[closest] parait particulier. En fait closest est une liste d'indice. 
+Apparemment un tableau peut prendre une liste d'indices pour récupérer toutes les valeurs de ces indices.
+Dans notre cas le tableau guess n'est rempli que de décisions donc de 1 ou de -1, ainsi le tableau y_ ne revoie pas grand chose. 
+Par ailleurs la prof a aussi remarqué selon l'exemple de la doc que renvoyer seulement le tableau rendrait la méthode predict bonne.
 
 Je n'avais pas très bien compris ce qu'était mon objectif dans le tableu de bord. J'ai pensé que tu parlais du fait d'aggrandir notre jeu de données avec des images bruitées. C'est ce que je compte faire dans la semaine.
 
+20/02 : 
+
+(Yannis) : J'ai réparer les petites erreurs dans le code. J'ai réussi à faire en sorte que ma classe soit utilisable dans la nouvelle méthode de classification
+ensembliste. J'ai fait des tests avec les histogrammes et la couleur bleu et on a des résultats très variables. Je pense qu'avec des poids approprié on devrais
+avoir de bon résultats.
 
