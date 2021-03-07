@@ -128,3 +128,12 @@ Je n'avais pas très bien compris ce qu'était mon objectif dans le tableu de bo
 ensembliste. J'ai fait des tests avec les histogrammes et la couleur bleu et on a des résultats très variables. Je pense qu'avec des poids approprié on devrais
 avoir de bon résultats.
 
+07/03 : 
+
+(Yannis) : J'ai oublier de faire mes commits de la semaine dernière. Cette entrée compte pour 2 semaines. J'ai régler les problèmes de normalisation dans le
+traitement des données. J'ai aussi ajouter les poids dans le classifieur par vote. De plus j'ai utiliser la Classe Pipeline qui permet, entre autre, de normaliser
+nos données une seconde fois, ce qui permet au classifieur Linéaire de converger. De plus j'ai aussi fait un classifieur avec Stacking les résultats me semble similaire
+au classifieur avec vote. J'ai aussi essayer d'ajouter des données en plus pour chaque image, notamment le nombre de pixel que l'on peux considérer comme Bleu,Vert
+ou Rouge. L'ajout de ces données n'est pas significatif, je pense qu'il faut ce concentrer sur nos méthodes statistiques et agrandir le jeu de données.
+J'ai aussi essayer de travailler avec des images 256 par 256 mais cela ne produit pas de bon résultat et est beaucoup plus lent. 
+
