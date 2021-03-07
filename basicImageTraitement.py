@@ -59,6 +59,42 @@ def isBlue(pixel):
     if(pixel[0] < blueValue and pixel[1] < blueValue):
         return True
     return False
+def isARed(pixel):
+    if(pixel[0] > 120 and pixel[1] < 100):
+        return True
+    return False
+
+def isAGreen(pixel):
+    if(pixel[0] < 100 and pixel[1] > 120 and pixel[2] < 80):
+        return True
+    return False
+
+def isABlue(pixel):
+    if(pixel[0] < 50 and pixel[1] < 90 and pixel[2] > 120):
+        return True
+    return False
+
+
+def analyseColorImg(imageArray):
+    nbrBlue = 0
+    nbrRed = 0
+    nbrGreen = 0
+    indexI = -1
+    indexJ = -1
+    for i in imageArray:
+        for j in imageArray[indexI]:
+            pixel = imageArray[indexI,indexJ]
+            if(isARed(pixel)):
+                nbrRed +=1
+            if(isAGreen(pixel)):
+                nbrGreen+=1
+            if(isABlue(pixel)):
+                nbrBlue+=1
+            indexJ +=1
+        indexI += 1
+        indexJ = 0
+    return nbrRed,nbrGreen,nbrGreen
+
 
 def analyseImageBlue(imageArray):
     nbrBlue = 0

@@ -15,29 +15,43 @@ image_listNM, image_listM = fileManager.makeTabOfImg()
 
 
 def prepareTabForLearning(tabOfM,tabOfNM,threshold):
-    tabOfData = zeros((len(tabOfM)+len(tabOfNM),129))
+    tabOfData = zeros((len(tabOfM)+len(tabOfNM),132))
     tabOfResult = np.arange((len(tabOfM)+len(tabOfNM)))
     index = 0
     for i in tabOfM:
-        otherPara = zeros(1)
+        otherPara = zeros(4)
         otherPara[0] = BIT.analyseImg(threshold,i)
+        r,g,b = BIT.analyseColorImg(i)
+        otherPara[1] = r
+        otherPara[2] = g
+        otherPara[3] = b
         fd, hog_image = hog(i, orientations=8, pixels_per_cell=(16, 16),
                     cells_per_block=(1, 1), visualize=True, multichannel=True)
+        otherPara[0] *= np.linalg.norm(fd) #On normalise
+        otherPara[1] *= np.linalg.norm(fd) #On normalise
+        otherPara[2] *= np.linalg.norm(fd) #On normalise
+        otherPara[3] *= np.linalg.norm(fd) #On normalise
         tabOfData[index] = np.concatenate((otherPara,fd))
         tabOfResult[index] = 1
         index +=1
     for i in tabOfNM:
-        otherPara = zeros(1)
+        otherPara = zeros(4)
         otherPara[0] = BIT.analyseImg(threshold,i)
+        r,g,b = BIT.analyseColorImg(i)
+        otherPara[1] = r
+        otherPara[2] = g
+        otherPara[3] = b
         fd, hog_image = hog(i, orientations=8, pixels_per_cell=(16, 16),
                     cells_per_block=(1, 1), visualize=True, multichannel=True)
+        otherPara[0] *= np.linalg.norm(fd) #On normalise
+        otherPara[1] *= np.linalg.norm(fd) #On normalise
+        otherPara[2] *= np.linalg.norm(fd) #On normalise
+        otherPara[3] *= np.linalg.norm(fd) #On normalise
         tabOfData[index] = np.concatenate((otherPara,fd))
-        tabOfResult[index] = -1
+        tabOfResult[index] = 0
         index +=1
     return (tabOfData,tabOfResult)
     
-
-
 
 
 
@@ -48,6 +62,10 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score
 from sklearn.ensemble import  VotingClassifier
+from sklearn.ensemble import  StackingClassifier
+
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
 
 
 from sklearn.utils.estimator_checks import check_estimator
@@ -70,17 +88,33 @@ def makeTraining(tabData,tabResult):
 
 
 def makeTrainingWithVoting(tabData,tabResult):
-    clf1 = GaussianNB()
-    clf2 = LogisticRegression(multi_class='multinomial', random_state=1)
-    clf3 = DecisionTreeClassifier(random_state=0)
-    clf4 = LinearClassifier.LearnByMiddle()
+    clf1 = Pipeline([('scaler', StandardScaler()), ('gauss',GaussianNB())])
+    clf2 = Pipeline([('scaler', StandardScaler()), ('logiReg',LogisticRegression(multi_class='multinomial',max_iter=600, random_state=1))])
+    clf3 = Pipeline([('scaler', StandardScaler()), ('dtc',DecisionTreeClassifier(random_state=0,max_depth=2))])
+    clf4 = Pipeline([('scaler', StandardScaler()), ('lc',LinearClassifier.LearnByMiddle())])
     
     X_train, X_test, y_train, y_test = train_test_split(tabData, tabResult, test_size=0.20)
     
-    eclf = VotingClassifier(estimators = [("gnb", clf1), ("lr", clf2), ("dtc", clf3),("lc",clf4)], voting='hard')
+    eclf = VotingClassifier(estimators = [("gnb", clf1), ("lr", clf2), ("dtc", clf3),("lc",clf4)],
+                            weights=[0.15,0.24,0.14,0.20], voting='hard')
     eclf.fit(X_train, y_train)
-    print(eclf.predict(X_test))
-    ## weights pour ceux qui font le moins d'erreur
+    eclf.predict(X_test)
+    # Stacking Classifier 
+    return accuracy_score(y_test,eclf.predict(X_test))
+
+def makeTrainWithStakClassifier(tabData,tabResult):
+    clf1 = Pipeline([('scaler', StandardScaler()), ('gauss',GaussianNB())])
+    clf2 = Pipeline([('scaler', StandardScaler()), ('logiReg',LogisticRegression(multi_class='multinomial',max_iter=600, random_state=1))])
+    clf3 = Pipeline([('scaler', StandardScaler()), ('dtc',DecisionTreeClassifier(random_state=0,max_depth=2))])
+    clf4 = Pipeline([('scaler', StandardScaler()), ('lc',LinearClassifier.LearnByMiddle())])
+    
+    
+    X_train, X_test, y_train, y_test = train_test_split(tabData, tabResult, test_size=0.20)
+    
+    eclf = StackingClassifier(estimators = [("gnb", clf1), ("lr", clf2), ("dtc", clf3),("lc",clf4)])
+    eclf.fit(X_train, y_train)
+    eclf.predict(X_test)
+    # Stacking Classifier 
     return accuracy_score(y_test,eclf.predict(X_test))
     
 def findBestThreshold(debut, step):
@@ -99,4 +133,11 @@ def findBestThreshold(debut, step):
 
 
 a,b = prepareTabForLearning(image_listM,image_listNM, 1750)
-print(makeTrainingWithVoting(a, b))
+
+# avg = 0
+# for i in range(15):
+#     avg += makeTraining(a, b)
+# avg = 0
+# for i in range(100):
+#     avg+=makeTrainWithStakClassifier(a, b)
+# print(avg/100) #0.69
