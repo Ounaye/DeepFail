@@ -15,7 +15,7 @@ image_listNM, image_listM = fileManager.makeTabOfImg()
 
 
 def prepareTabForLearning(tabOfM,tabOfNM,threshold):
-    tabOfData = zeros((len(tabOfM)+len(tabOfNM),132))
+    tabOfData = zeros((len(tabOfM)+len(tabOfNM),100))
     tabOfResult = np.arange((len(tabOfM)+len(tabOfNM)))
     index = 0
     for i in tabOfM:
@@ -133,7 +133,7 @@ def findBestThreshold(debut, step):
 
 
 a,b = prepareTabForLearning(image_listM,image_listNM, 1750)
-
+print(makeTrainWithStakClassifier(a, b))
 # avg = 0
 # for i in range(15):
 #     avg += makeTraining(a, b)
