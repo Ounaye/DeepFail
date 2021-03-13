@@ -138,3 +138,8 @@ ou Rouge. L'ajout de ces données n'est pas significatif, je pense qu'il faut ce
 J'ai aussi essayer de travailler avec des images 256 par 256 mais cela ne produit pas de bon résultat et est beaucoup plus lent. 
 
 (Equipe) : Structuration du dossier sur Overleaf, répartition des taches et réunion jeudi pour vérifier que tout est bon et programmez le diapo
+
+(13/03) 
+
+(Yannis) Conforme le projet au demande du rendu, rajout d'outils d'analyses des résultats, amélioration des performances à 90 %. Simplification de l'analyse de 
+l'image avec juste un histogramme des couleurs ( analyse bien plus rapide des images ).
