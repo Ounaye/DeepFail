@@ -9,11 +9,14 @@ from matplotlib import pyplot as plt
 import numpy as np
 import cv2 as cv
 
-# La plupart de ces fonctionc sont useless :/
 
-#Détection de contours  
+"""
+This file is not used in the final project. We keep it because we 
+spend enough time to make it. It does the same things as 
+skimage.feature.hog. It still had a little conversion problem in 
+analyseGradImg.
+"""
 
-#image réduite
 
 def detectForme(img):
     #img = cv.imread(img,0)
@@ -24,14 +27,10 @@ def detectForme(img):
     abs_grad_x = cv.convertScaleAbs(sobelx)
     abs_grad_y = cv.convertScaleAbs(sobely)
     modgrad = cv.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
-    #On ajoute nos deux images l'une sur l'autre
     return modgrad,sobelx,sobely
 
 def makeHistogramOfGrad(img,pas,nbrBarre):
     tabHistogramme = np.zeros(nbrBarre)
-    if img.shape != (64,64):
-        a =5
-    #     return [0,0,0,0,0,0,0,0,0,0]
     for i in range(0,64,pas):
         for j in range(0,64,pas):
                 analyseGradImg(img, tabHistogramme,nbrBarre,i,j,pas)
@@ -56,10 +55,4 @@ def analyseGradImg(img,tabHist,nbrBarre,xDebut,yDebut,pas):
             
 
 
-imgdaz = cv.imread("Data/Mer/Mer_1/aaaaa.jpeg",0)
-tab  = makeHistogramOfGrad(imgdaz,8,10)
-imgdaz = cv.imread("Data/Mer/Mer_1/aba13.jpeg",0)
-tab  = makeHistogramOfGrad(imgdaz,8,10)
-# plt.bar([0,20,40,60,80,100,120,140,160,180],tab,width=19.0)
-# plt.show();
 

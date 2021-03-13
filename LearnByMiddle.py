@@ -3,6 +3,23 @@
 Created on Sun Feb 14 11:03:22 2021
 @author: Ounaye
 """
+
+"""
+This class is a simple try to make our classification algorithm.
+Even if we try, this algo didn't pass all the validation test of 
+sklearn.
+
+This algorithm try to find the most commun vecteur of all a class.
+It use the most simple method with add space by space all value and 
+make an average. 
+Then the prediction is the distance between the two center we found 
+with the fit process.
+
+This method have a sense if the vector are scaled, else some big 
+vector can totally overtake the average. 
+
+"""
+
 import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
@@ -30,9 +47,6 @@ class LearnByMiddle(BaseEstimator, ClassifierMixin):
         # Return the classifier
         return self
 
-
-#prend en entre un classifieur et un ensemble de donnée X
-#prédire les étiquettes de X
     def predict(self, X):
 
         # Check is fit had been called
@@ -53,7 +67,7 @@ class LearnByMiddle(BaseEstimator, ClassifierMixin):
         return guess
 
     
-    # My code
+    # Most of our code addition is here
 
     def determineCentreGrav(tabOfData,tabOfResult):
         centerOfTrue = np.zeros(len(tabOfData[0]))

@@ -11,6 +11,16 @@ from skimage.transform import rotate
 from skimage.util import crop
 from skimage import io
 
+"""
+This file is about making actual change in an image. 
+The goal is to duplicate an image to make copy with slight modification
+We do 6 rotation and 4 translation.
+
+We didn't had the time to make modification on the Contraste of
+our image. Moreover we have enough data to make the calculation long 
+enough.
+
+"""
 #Toutes les Images sont sous format jpeg
 
 

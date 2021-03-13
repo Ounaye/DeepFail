@@ -5,6 +5,18 @@ Created on Sun Feb  7 12:35:28 2021
 @author: Ounaye
 """
 
+"""
+This file is about getting some information on the image.
+It's only for simple operation, with no complex operation.
+This is usefull to get quickly and natural ( for a human ) information
+for the image.
+
+Most of this function where written at the start of the project.
+We still use this file to make a histogram of color for each image.
+We take 12 color information by image
+    
+"""
+
 
 from PIL import Image
 
@@ -15,7 +27,6 @@ def openImg(str):
     r,g,b = img.split()
     return r, g, b
 
-# MaxColor : Dumb Test 0,5 de prédiction
 
 def findMax(histo):
     tmp = 0
@@ -74,6 +85,11 @@ def isABlue(pixel):
         return True
     return False
 
+"""
+Calculate how much pixel can be considerate as Blue,Green and Red
+in our image. We choose to use this mesure than a histogram of color
+because we find that more natural.
+"""
 
 def analyseColorImg(imageArray):
     nbrBlue = 0
@@ -95,6 +111,13 @@ def analyseColorImg(imageArray):
         indexJ = 0
     return nbrRed,nbrGreen,nbrGreen
 
+"""
+This two function find how much pixel can be seen as blue pixel, 
+and find if this number is more than a threshold. We found that this
+information alone can be very usefull for early testing and approach
+70 % of good guess.
+The Threshold was determined by finding the optimal value
+"""
 
 def analyseImageBlue(imageArray):
     nbrBlue = 0
@@ -114,3 +137,21 @@ def analyseImg(threshold,tabImg):
         return 1
     else:
         return -1
+    
+import skimage.exposure as skExp
+import numpy as np
+
+"""
+The second and third for loop had to do 256 steps
+Exemple 4*64 = 256, it's okay
+"""
+def littleColorHisto(image):
+    histo = np.zeros((3,4))
+    for k in range(3):
+        histoOneColor = skExp.histogram(image[...,k],source_range='dtype',nbins = 8)
+        histo[k] = np.zeros(4)
+        for i in range(4):
+            for j in range(64):
+                histo[k][i] += histoOneColor[0][j + 64*i]
+    return np.concatenate((histo[0],histo[1],histo[2]))
+
