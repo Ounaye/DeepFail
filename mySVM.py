@@ -26,7 +26,7 @@ class mySVM(BaseEstimator, ClassifierMixin):
          
 
     
-    def costFunction(self,weight,x,y): # On l'utilise pour évaluer l'avancé du modèle
+    def costFunction(self,weight,x,y): # On l'utilise pour évaluer l'avancée du modèle
         N = x.shape[0]
         dist = 1 - y *( np.dot(x,weight))
         dist[dist < 0] = 0
@@ -48,9 +48,9 @@ class mySVM(BaseEstimator, ClassifierMixin):
             dst = np.array([dst])
         for i in dst:
             downI = 0
-            if(max(0,i) == 0): # En dehors de notre marge on change rien
+            if(max(0,i) == 0): 
                 downI = weight
-            else: # Dans notre marge on ajuste le poids
+            else: 
                 downI = weight - (self.reg_strenght_ * yBatch[index] * xBatch[index] )
             downWeight += downI
             index += 1
@@ -97,8 +97,7 @@ class mySVM(BaseEstimator, ClassifierMixin):
             else:
                 guess[index] = 0
             index += 1
-        
-        #peut-etre modifier y_[guess]
+
 
         return guess
 
