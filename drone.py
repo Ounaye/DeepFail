@@ -9,7 +9,6 @@ import glob as glb
 from skimage import io
 
 from joblib import  load
-import skimage.transform as sky_trfm
 
 import basicImageTraitement as BIT
 import numpy as np

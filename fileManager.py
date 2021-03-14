@@ -27,12 +27,12 @@ import skimage.util as sk_util
 
 
 def makeTabOfImg():
-    list_filesNM = glb.glob("DataEnhanced/Ailleurs/**/*.jpeg", recursive=True)
+    list_filesNM = glb.glob("Data64/Ailleurs/**/*.jpeg", recursive=True)
     image_listNM = []
     for filename in list_filesNM:
         image_listNM.append(io.imread(filename))
     
-    list_filesM = glb.glob("DataEnhanced/Mer/**/*.jpeg", recursive=True)
+    list_filesM = glb.glob("Data64/Mer/**/*.jpeg", recursive=True)
     image_listM = []
     for filename in list_filesM:
         image_listM.append(io.imread(filename))

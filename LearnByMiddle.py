@@ -28,8 +28,8 @@ from sklearn.utils.multiclass import unique_labels
 class LearnByMiddle(BaseEstimator, ClassifierMixin):
     
     # Code found at : https://scikit-learn.org/stable/developers/develop.html?fbclid=IwAR3oTTLl_HjIZxfJOsQabMN2D09KQGhfpuSqxK-2bCd1ZkyKedw6lqDSShE
-    def __init__(self, demo_param='demo'):
-        self.demo_param = demo_param
+    def __init__(self):
+        print("LearnByMiddle")
 
     def fit(self, X, y):
 

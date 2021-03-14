@@ -50,7 +50,7 @@ def TestAndStats(tabDataTest,tabResultTest):
     avgAccM = 0
     avgAccNM = 0
     for i in range(100):
-        tabOfTrain[i],accM,accNM = testOnData(tabDataTest,tabResultTest,stack=False)
+        tabOfTrain[i],accM,accNM = testOnData(tabDataTest,tabResultTest,stack=True)
         axisX[i] = i
         avg+=tabOfTrain[i]
         avgAccM += accM
@@ -63,12 +63,12 @@ def TestAndStats(tabDataTest,tabResultTest):
 
 
 def TestAndStatsQuick(tabDataTest,tabResultTest):
-    tabOfTrain = np.zeros(100)
+    tabOfTrain = np.zeros(20)
     avg = 0
-    for i in range(100):
+    for i in range(20):
         tabOfTrain[i]= testOnDataQuick(tabDataTest,tabResultTest)
         avg+=tabOfTrain[i]
-    print("Moyenne : " + str(avg/100))
+    print("Moyenne : " + str(avg/20))
     print("Ecart Type : " + str(math.sqrt(np.var(tabOfTrain, 0))))
 
 
@@ -78,13 +78,13 @@ def getMoreResult(tabPredict,tabSol):
     nbrFT = 0
     nbrFF = 0
     for i in range(len(tabPredict)):
-        if(tabSol[i] == 0): #NM
-            if(tabPredict[i] == 0):
+        if(tabSol[i] == -1): #NM
+            if(tabPredict[i] == -1):
                 nbrFF+=1
             else:
                 nbrFT+=1
         else:
-            if(tabPredict[i] == 0):
+            if(tabPredict[i] == -1):
                 nbrTF+=1
             else:
                 nbrTT+=1

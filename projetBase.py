@@ -25,7 +25,6 @@ from skimage.feature import hog
 
 import LearnByMiddle as LinearClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score
 from sklearn.ensemble import  VotingClassifier
@@ -37,9 +36,11 @@ from sklearn.pipeline import Pipeline
 from joblib import dump
 
 import sklearn.svm  as skSVM
+import mySVM as mySVM
 
 
 import testAndFeedBack as testFunc
+
 
 image_listNM, image_listM = fileManager.makeTabOfImg()
 
@@ -64,9 +65,10 @@ def prepareTabForLearning(tabOfM,tabOfNM,threshold):
         fd, hog_image = hog(i, orientations=8, pixels_per_cell=(shape[0]/4, shape[1]/4),
                     cells_per_block=(1, 1), visualize=True, multichannel=True)
         tabOfData[index] = np.concatenate((otherPara,fd))
-        tabOfResult[index] = 0
+        tabOfResult[index] = -1
         index +=1
     return (tabOfData,tabOfResult)
+
 
 
 def makeTraining(tabData,tabResult): #Use to train one classifier alone
@@ -75,7 +77,7 @@ def makeTraining(tabData,tabResult): #Use to train one classifier alone
     X_train, X_test, y_train, y_test = train_test_split(tabData, tabResult, test_size=0.20) 
     
     
-    classifieur = GaussianNB()
+    classifieur = Pipeline([('scaler', StandardScaler()), ('mySVM',mySVM.mySVM())])
     classifieur.fit(X_train, y_train)
     
    
@@ -87,13 +89,13 @@ def makeTraining(tabData,tabResult): #Use to train one classifier alone
 def makeTrainingWithVoting(tabData,tabResult):
     clf1 = Pipeline([('scaler', StandardScaler()), ('gauss',GaussianNB())])
     clf2 = Pipeline([('scaler', StandardScaler()), ('svm',skSVM.SVC(kernel ="linear"))])
-    clf3 = Pipeline([('scaler', StandardScaler()), ('dtc',DecisionTreeClassifier(random_state=0,max_depth=2))])
+    clf3 = Pipeline([('scaler', StandardScaler()), ('mySVM',mySVM.mySVM())])
     clf4 = Pipeline([('scaler', StandardScaler()), ('lc',LinearClassifier.LearnByMiddle())])
     
     X_train, X_test, y_train, y_test = train_test_split(tabData, tabResult, test_size=0.20)
     
-    eclf = VotingClassifier(estimators = [("gnb", clf1), ("svm", clf2), ("dtc", clf3),("lc",clf4)],
-                            weights=[0.15,0.24,0.14,0.20], voting='hard')
+    eclf = VotingClassifier(estimators = [("gnb", clf1),("svm",clf2),("mySvm",clf3),("lc",clf4)],
+                            weights=[0.15,0.11,0.24,0.20], voting='hard')
     eclf.fit(X_train, y_train)
     dump(eclf,"clfVote.joblib")
     
@@ -102,25 +104,19 @@ def makeTrainingWithVoting(tabData,tabResult):
 def makeTrainWithStakClassifier(tabData,tabResult):
     clf1 = Pipeline([('scaler', StandardScaler()), ('gauss',GaussianNB())])
     clf2 = Pipeline([('scaler', StandardScaler()), ('svm',skSVM.SVC(kernel ="linear"))])
-    clf3 = Pipeline([('scaler', StandardScaler()), ('dtc',DecisionTreeClassifier(random_state=0,max_depth=2))])
+    clf3 = Pipeline([('scaler', StandardScaler()), ('mySVM',mySVM.mySVM(maxIteration_=3000))])
     clf4 = Pipeline([('scaler', StandardScaler()), ('lc',LinearClassifier.LearnByMiddle())])
     
     
     X_train, X_test, y_train, y_test = train_test_split(tabData, tabResult, test_size=0.20)
     
-    eclf = StackingClassifier(estimators = [("gnb", clf1), ("svm", clf2), ("dtc", clf3),("lc",clf4)])
+    eclf = StackingClassifier(estimators = [("gnb", clf1),("svm",clf2),("mySVM",clf3),("lc",clf4)])
     eclf.fit(X_train, y_train)
     dump(eclf,"clfStack.joblib")
     
     return X_test,y_test
 
 
-"""
-Function used to find the best Threshold for the BIT.analyseImg 
-analyse function
-
-
-"""
 def findBestThreshold(debut, step):
     maxTreshold = -800000
     maxScore = -800000
@@ -137,12 +133,9 @@ def findBestThreshold(debut, step):
 
 
 
-"""
-How to make a Quick
 
 a,b = prepareTabForLearning(image_listM,image_listNM, 1750)
-testFunc.TestAndStats(a,b)
 
-                
-"""
+makeTrainWithStakClassifier(a,b)
+testFunc.TestAndStats(a,b)
 
